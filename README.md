@@ -167,17 +167,6 @@ The DAG provides multiple views for monitoring:
 
 ---
 
-## Use Cases
-
-This pipeline architecture is applicable to:
-- Customer segmentation and behavioral analysis
-- User activity pattern recognition
-- E-commerce trend analysis
-- Automated ML model retraining workflows
-- Data quality monitoring pipelines
-
----
-
 ## Future Enhancements
 
 - [ ] Integration with cloud storage (S3/GCS) for data persistence
@@ -186,16 +175,3 @@ This pipeline architecture is applicable to:
 - [ ] Real-time inference API deployment
 - [ ] Advanced alerting and notification system
 - [ ] Integration with MLflow for experiment tracking
-
----
-
-## Contact
-
-**Nagashree BK**  
-[GitHub](https://github.com/NagashreeBK98) | [LinkedIn](https://www.linkedin.com/in/nagashreebk)
-
----
-
-## License
-
-This project is open source and available under the MIT License.
