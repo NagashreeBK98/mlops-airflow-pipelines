@@ -1,135 +1,201 @@
-# Airflow ML Pipeline – User Activity Trend Analysis
+# User Activity Trend Analysis Pipeline
+**End-to-End ML Workflow Orchestration with Apache Airflow**
 
-```yaml
-project:
-  name: Airflow ML Pipeline – User Activity Trend Analysis
-  category: MLOps / Workflow Orchestration
-  tool: Apache Airflow
-  execution: Dockerized
-  goal: >
-    Build and orchestrate an end-to-end machine learning pipeline using
-    Apache Airflow, covering data ingestion, preprocessing, model training,
-    artifact generation, and inference.
+---
 
-overview:
-  summary: >
-    This repository demonstrates a production-style machine learning workflow
-    orchestrated using Apache Airflow. The pipeline processes user behavior data,
-    applies preprocessing, trains a clustering model, stores the model artifact,
-    and performs inference through a structured DAG.
-  key_features:
-    - End-to-end Airflow DAG orchestration
-    - Clear task dependencies and execution order
-    - Model artifact creation and reuse
-    - Containerized setup using Docker Compose
-    - Reproducible local execution
+## Overview
+This project implements a production-grade machine learning pipeline for user activity trend analysis using Apache Airflow. The pipeline orchestrates the complete workflow from data ingestion to model deployment, demonstrating real-world MLOps practices including automated workflow management, task dependency handling, and artifact persistence.
 
-airflow_pipeline:
-  dag_name: Airflow_Lab1
-  tasks:
-    - name: load_data_task
-      responsibility:
-        - Load raw CSV dataset
-        - Select relevant behavioral features
-        - Serialize data using Base64 encoding
+Built with a containerized Airflow environment, this system showcases scalable data processing and machine learning orchestration patterns used in modern data engineering and MLOps systems.
 
-    - name: data_preprocessing_task
-      responsibility:
-        - Decode serialized data
-        - Handle missing values
-        - Apply MinMax scaling
-        - Output processed dataset
+---
 
-    - name: build_save_model_task
-      responsibility:
-        - Train KMeans clustering models
-        - Apply Elbow Method for cluster analysis
-        - Save trained model artifact
+## Project Structure
 
-    - name: load_model_task
-      responsibility:
-        - Load saved model
-        - Preprocess test data
-        - Generate cluster prediction
+```
+mlops-airflow-pipelines/
+├── dags/
+│   ├── airflow_lab1_dag.py
+│   ├── src/
+│   │   ├── __init__.py
+│   │   └── lab.py
+│   ├── data/
+│   │   ├── online_shoppers_intention.csv
+│   │   └── test.csv
+│   └── model/
+│       └── user_activity_trend_model.pkl
+├── config/
+│   └── airflow.cfg
+├── plugins/
+├── logs/
+├── docker-compose.yaml
+├── webserver_config.py
+├── .env
+├── .gitignore
+└── README.md
+```
 
-project_structure:
-  root_directory: mlops-airflow-pipelines/
-  layout:
-    dags:
-      airflow_lab1_dag.py: Airflow DAG definition
-      src:
-        __init__.py: Python package initializer
-        lab.py: Machine learning logic
-      data:
-        online_shoppers_intention.csv: Training dataset
-        test.csv: Inference dataset
-      model:
-        user_activity_trend_model.pkl: Trained model artifact
-    plugins: Airflow plugins directory
-    logs: Airflow execution logs
-    docker-compose.yaml: Docker-based Airflow setup
-    airflow.cfg: Airflow configuration
-    webserver_config.py: Webserver settings
-    .env: Environment variables
-    .gitignore: Git ignore rules
-    README.md: Project documentation
+---
 
-technology_stack:
-  programming_language: Python 3.7
-  orchestration: Apache Airflow 2.5.1
-  machine_learning:
-    - pandas
-    - scikit-learn
-    - kneed
-  infrastructure:
-    - Docker
-    - Docker Compose
-    - PostgreSQL
-    - Redis
+## Pipeline Architecture
 
-model_artifact:
-  name: user_activity_trend_model.pkl
-  generated_by: build_save_model_task
-  stored_at: dags/model/
-  purpose: >
-    Persist trained clustering model for inference and reuse within the pipeline.
+### DAG: `Airflow_Lab1`
 
-how_to_run_locally:
-  prerequisites:
-    - Docker installed
-    - Docker Compose installed
-    - Git installed
+The pipeline consists of four sequential tasks that form a complete ML workflow:
 
-  steps:
-    - step: clone_repository
-      command: |
-        git clone https://github.com/<your-username>/mlops-airflow-pipelines.git
-        cd mlops-airflow-pipelines
+**1. Data Ingestion (`load_data_task`)**
+   - Loads raw CSV dataset containing user activity metrics
+   - Performs feature selection based on behavioral patterns
+   - Serializes data for efficient inter-task communication using XCom
 
-    - step: start_airflow_services
-      command: |
-        docker-compose up -d
+**2. Data Processing (`data_preprocessing_task`)**
+   - Handles missing values and data quality issues
+   - Applies MinMax normalization for feature scaling
+   - Prepares dataset for clustering analysis
 
-    - step: access_airflow_ui
-      url: http://localhost:8080
-      default_credentials:
-        username: airflow
-        password: airflow
+**3. Model Training (`build_save_model_task`)**
+   - Trains KMeans clustering models with multiple configurations
+   - Implements Elbow Method for optimal cluster determination
+   - Persists trained model artifact for reusability
 
-    - step: trigger_pipeline
-      instructions:
-        - Unpause DAG Airflow_Lab1
-        - Trigger DAG manually
-        - Monitor Grid view and logs
+**4. Model Inference (`load_model_task`)**
+   - Loads persisted model from artifact storage
+   - Processes test data through preprocessing pipeline
+   - Generates cluster predictions for new user activity data
 
-execution_outcome:
-  expected_results:
-    - All DAG tasks complete successfully
-    - Model artifact created
-    - Inference executed successfully
+---
 
-use_case:
-  relevance:
-    - Demonstrates production-grade Airflow usage
-    - Showcases ML pipeline orchestration
-    - Suitable for Data Engineering and MLOps roles
+## Machine Learning Implementation
+
+The ML logic (`lab.py`) implements:
+- **Feature Engineering**: Behavioral metric selection and transformation
+- **Data Preprocessing**: Scaling, normalization, and missing value handling
+- **Clustering Algorithm**: KMeans with automated cluster optimization
+- **Model Persistence**: Pickle-based artifact storage for model reuse
+- **Inference Pipeline**: End-to-end prediction workflow
+
+### Key Technical Features
+- Automated hyperparameter tuning using Elbow Method
+- Scalable preprocessing pipeline
+- Model versioning and artifact management
+- Reproducible ML workflows
+
+---
+
+## Technology Stack
+
+| Component | Technology |
+|-----------|-----------|
+| **Orchestration** | Apache Airflow 2.5.1 |
+| **Language** | Python 3.7 |
+| **ML Framework** | scikit-learn, pandas, kneed |
+| **Infrastructure** | Docker, Docker Compose |
+| **Database** | PostgreSQL |
+| **Message Broker** | Redis |
+| **Containerization** | Docker Engine |
+
+---
+
+## Getting Started
+
+### Prerequisites
+- Docker Desktop or Docker Engine
+- Docker Compose
+- Git
+
+### Installation & Setup
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/NagashreeBK98/mlops-airflow-pipelines.git
+   cd mlops-airflow-pipelines
+   ```
+
+2. **Start Airflow services**
+   ```bash
+   docker-compose up -d
+   ```
+
+3. **Verify deployment**
+   ```bash
+   docker ps
+   ```
+   You should see containers for webserver, scheduler, postgres, and redis running.
+
+4. **Access Airflow UI**
+   - URL: `http://localhost:8080`
+   - Username: `airflow`
+   - Password: `airflow`
+
+### Running the Pipeline
+
+1. Navigate to the Airflow web interface
+2. Locate the `Airflow_Lab1` DAG in the dashboard
+3. Toggle the DAG to **ON** (unpause)
+4. Click the **Trigger DAG** button (▶️ icon)
+5. Monitor execution in real-time:
+   - **Grid View**: Task execution timeline and status
+   - **Graph View**: Visual task dependencies
+   - **Logs**: Detailed execution logs for each task
+
+### Expected Results
+
+✅ All tasks complete successfully in sequence  
+✅ Model artifact saved to `dags/model/user_activity_trend_model.pkl`  
+✅ Cluster predictions generated for test dataset  
+✅ Execution logs available for debugging and monitoring  
+
+---
+
+## Key Features
+
+- **Automated Workflow Orchestration**: End-to-end pipeline automation with dependency management
+- **Scalable Architecture**: Containerized deployment for easy scaling and reproducibility
+- **Model Artifact Management**: Persistent storage and versioning of trained models
+- **Monitoring & Observability**: Comprehensive logging and task execution tracking
+- **Production-Ready**: Demonstrates MLOps best practices for real-world deployment
+
+---
+
+## Pipeline Visualization
+
+The DAG provides multiple views for monitoring:
+- **Graph View**: Visualize task dependencies and data flow
+- **Grid View**: Track execution history across multiple runs
+- **Gantt Chart**: Analyze task duration and identify bottlenecks
+- **Code View**: Inspect DAG definition and task logic
+
+---
+
+## Use Cases
+
+This pipeline architecture is applicable to:
+- Customer segmentation and behavioral analysis
+- User activity pattern recognition
+- E-commerce trend analysis
+- Automated ML model retraining workflows
+- Data quality monitoring pipelines
+
+---
+
+## Future Enhancements
+
+- [ ] Integration with cloud storage (S3/GCS) for data persistence
+- [ ] Model performance monitoring and drift detection
+- [ ] A/B testing framework for model comparison
+- [ ] Real-time inference API deployment
+- [ ] Advanced alerting and notification system
+- [ ] Integration with MLflow for experiment tracking
+
+---
+
+## Contact
+
+**Nagashree BK**  
+[GitHub](https://github.com/NagashreeBK98) | [LinkedIn](https://www.linkedin.com/in/nagashreebk)
+
+---
+
+## License
+
+This project is open source and available under the MIT License.
