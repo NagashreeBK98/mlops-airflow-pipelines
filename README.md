@@ -1,3 +1,6 @@
+# Airflow ML Pipeline – User Activity Trend Analysis
+
+```yaml
 project:
   name: Airflow ML Pipeline – User Activity Trend Analysis
   category: MLOps / Workflow Orchestration
@@ -107,12 +110,6 @@ how_to_run_locally:
       command: |
         docker-compose up -d
 
-    - step: verify_containers
-      command: |
-        docker ps
-      expected_result: >
-        airflow-webserver, airflow-scheduler, postgres, and redis containers running
-
     - step: access_airflow_ui
       url: http://localhost:8080
       default_credentials:
@@ -121,27 +118,18 @@ how_to_run_locally:
 
     - step: trigger_pipeline
       instructions:
-        - Open Airflow UI
-        - Locate DAG named Airflow_Lab1
-        - Unpause the DAG
+        - Unpause DAG Airflow_Lab1
         - Trigger DAG manually
-
-    - step: monitor_execution
-      instructions:
-        - View task status in Grid view
-        - Inspect logs per task
-        - Verify model artifact generation in dags/model/
+        - Monitor Grid view and logs
 
 execution_outcome:
   expected_results:
     - All DAG tasks complete successfully
-    - Model artifact created and stored
-    - Inference task produces cluster prediction
-    - Logs available for each task execution
+    - Model artifact created
+    - Inference executed successfully
 
 use_case:
   relevance:
-    - Demonstrates real-world Airflow usage
-    - Shows ML pipeline orchestration
-    - Highlights reproducible MLOps workflows
-    - Suitable for data engineering and MLOps roles
+    - Demonstrates production-grade Airflow usage
+    - Showcases ML pipeline orchestration
+    - Suitable for Data Engineering and MLOps roles
