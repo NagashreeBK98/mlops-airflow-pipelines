@@ -124,8 +124,8 @@ The ML logic (`lab.py`) implements:
 
 4. **Access Airflow UI**
    - URL: `http://localhost:8080`
-   - Username: `airflow`
-   - Password: `airflow`
+   - Username: `airflow2`
+   - Password: `airflow2`
 
 ### Running the Pipeline
 
